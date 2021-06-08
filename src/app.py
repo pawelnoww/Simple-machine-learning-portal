@@ -31,6 +31,18 @@ def test():
     return render_template('index.html')
 
 
+@app.route('/experiments')
+@login_required
+def experiments():
+    return render_template('experiments.html')
+
+
+@app.route('/experiment')
+@login_required
+def experiment():
+    return render_template('experiment.html')
+
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -77,10 +89,17 @@ def signup_post():
         flash(f'User {login} already exists')
         return redirect(url_for('signup'))
 
+    # Hash password
     password = generate_password_hash(password)
+
+    # Create user and add to database
     user = User(login, password)
     db.session.add(user)
     db.session.commit()
+
+    # Create user directory
+    create_user_directory(login)
+
     return redirect(url_for('login'))
 
 
@@ -97,9 +116,33 @@ def upload_file():
     return redirect(url_for('index'))
 
 
+def create_user_directory(username):
+    os.makedirs(f'{get_solution_dir()}/data/users/{username}')
+
+
+def get_user_experiments():
+    return sorted(os.listdir(f'{get_solution_dir()}/data/users/{current_user.login}'))
+
+
+def create_experiment():
+    new_dir_name = f'Experiment{str(len(get_user_experiments()) + 1).zfill(2)}'
+    os.makedirs(f'{get_solution_dir()}/data/users/{current_user.login}/{new_dir_name}')
+
+
+# def set_active_experiment(experiment):
+#     current_user.active_experiment = experiment
+#     print(current_user.active_experiment)
+
+
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'sdafddsfdsfsdfdsafdasddad'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+
+    # Functions
+    app.jinja_env.globals.update(get_user_experiments=get_user_experiments)
+    app.jinja_env.globals.update(create_experiment=create_experiment)
+    # app.jinja_env.globals.update(set_active_experiment=set_active_experiment)
+
     db.init_app(app)
     login_manager.login_view = 'login'
     login_manager.init_app(app)
