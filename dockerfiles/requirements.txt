@@ -8,3 +8,6 @@ pandas
 matplotlib
 plotly
 seaborn
+flask-sqlalchemy
+flask-login
+werkzeug

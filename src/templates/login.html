@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>Login page</title>
+    </head>
+
+    <body>
+        <h3 class="title">Login</h3>
+        <form method="POST" action="/login">
+            <div>
+                <input type="text" placeholder="Login" name="login">
+            </div>
+            <div>
+                <input type="text" placeholder="Password" name="password">
+            </div>
+            <div>
+                <button>Sign in</button>
+                <span><a href="{{ url_for('signup') }}">Sign up</a></span>
+            </div>
+        </form>
+
+        <div class="messages">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+    </body>
+
+</html>
+
