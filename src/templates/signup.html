@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>Login page</title>
+        <title>Sign up page</title>
     </head>
 
     <body>
-        <h3 class="title">Login</h3>
-        <form method="POST" action="/login">
+        <h3 class="title">Sign up</h3>
+        <form method="POST" action="/signup">
             <div>
                 <input type="text" placeholder="Login" name="login">
             </div>
@@ -13,8 +13,7 @@
                 <input type="text" placeholder="Password" name="password">
             </div>
             <div>
-                <button>Sign in</button>
-                <span><a href="{{ url_for('signup') }}">Sign up</a></span>
+                <button>Sign up</button>
             </div>
         </form>
 
@@ -28,6 +27,8 @@
             {% endwith %}
         </div>
     </body>
+
+
 
 </html>
 

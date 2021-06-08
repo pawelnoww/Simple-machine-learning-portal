@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,9 +11,13 @@ login_manager = LoginManager()
 
 
 class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     login = db.Column(db.String(30), unique=True)
-    password = db.Column(db.String(30))
+    password = db.Column(db.String(150))
+
+    def __init__(self, login, password):
+        self.login = login
+        self.password = password
 
 
 @login_manager.user_loader
@@ -33,14 +37,20 @@ def login():
 
 
 @app.route('/login', methods=['POST'])
-def loginPost():
+def login_post():
     login = request.form.get('login')
     password = request.form.get('password')
     user = User.query.filter_by(login=login).first()
+
     if user and check_password_hash(user.password, password):
+        login_user(user)
         return redirect(url_for('test'))
-    # flash('message')
-    return redirect(url_for('login'))
+    elif not user:
+        flash("Wrong username")
+        return redirect(url_for('login'))
+    else:
+        flash("Wrong password")
+        return redirect(url_for('login'))
 
 
 @app.route('/logout')
@@ -55,9 +65,23 @@ def signup():
     return render_template('signup.html')
 
 
-# @app.route('/signup', methods=['POST'])
-# def signup():
-#     return
+@app.route('/signup', methods=['POST'])
+def signup_post():
+    login = request.form.get('login')
+    password = request.form.get('password')
+
+    if len(password) < 5:
+        flash("Password should be at least 5 characters long")
+        return redirect(url_for('signup'))
+    if User.query.filter_by(login=login).first():
+        flash(f'User {login} already exists')
+        return redirect(url_for('signup'))
+
+    password = generate_password_hash(password)
+    user = User(login, password)
+    db.session.add(user)
+    db.session.commit()
+    return redirect(url_for('login'))
 
 
 @app.route('/upload')
