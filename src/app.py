@@ -20,6 +20,16 @@ class User(UserMixin, db.Model):
         self.password = password
 
 
+class UserExperiment(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    login = db.Column(db.String(30), db.ForeignKey('user.login'))
+    active_experiment = db.Column(db.String(100))
+
+    def __init__(self, login):
+        self.login = login
+        self.active_experiment = None
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -40,7 +50,14 @@ def experiments():
 @app.route('/experiment')
 @login_required
 def experiment():
-    return render_template('experiment.html')
+    user_experiment = UserExperiment.query.filter_by(login=current_user.login).first()
+    experiment_name = user_experiment.active_experiment.split('/')[-1]
+
+    data = {}
+
+    data['experiment_name'] = experiment_name
+
+    return render_template('experiment.html', data=data)
 
 
 @app.route('/login')
@@ -95,6 +112,12 @@ def signup_post():
     # Create user and add to database
     user = User(login, password)
     db.session.add(user)
+
+    # Assign user with None experiment
+    user_experiment = UserExperiment(login)
+    db.session.add(user_experiment)
+
+    # Commit
     db.session.commit()
 
     # Create user directory
@@ -124,14 +147,23 @@ def get_user_experiments():
     return sorted(os.listdir(f'{get_solution_dir()}/data/users/{current_user.login}'))
 
 
+@app.route('/create_experiment')
 def create_experiment():
     new_dir_name = f'Experiment{str(len(get_user_experiments()) + 1).zfill(2)}'
     os.makedirs(f'{get_solution_dir()}/data/users/{current_user.login}/{new_dir_name}')
+    return redirect(url_for('experiments'))
 
 
-# def set_active_experiment(experiment):
-#     current_user.active_experiment = experiment
-#     print(current_user.active_experiment)
+@app.route('/set_active_experiment')
+def set_active_experiment():
+    experiment = request.args.get('name')
+    active_experiment_path = f'{get_solution_dir()}/data/users/{current_user.login}/{experiment}'
+
+    user_experiment = UserExperiment.query.filter_by(login=current_user.login).first()
+    user_experiment.active_experiment = active_experiment_path
+    db.session.commit()
+
+    return redirect(url_for('experiment'))
 
 
 if __name__ == '__main__':
@@ -140,8 +172,8 @@ if __name__ == '__main__':
 
     # Functions
     app.jinja_env.globals.update(get_user_experiments=get_user_experiments)
-    app.jinja_env.globals.update(create_experiment=create_experiment)
-    # app.jinja_env.globals.update(set_active_experiment=set_active_experiment)
+    #app.jinja_env.globals.update(create_experiment=create_experiment)
+    #app.jinja_env.globals.update(set_active_experiment=set_active_experiment)
 
     db.init_app(app)
     login_manager.login_view = 'login'
