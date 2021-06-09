@@ -5,7 +5,8 @@ from flask_login import UserMixin, LoginManager, login_user, current_user, logou
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from src.utils.solutionutils import get_solution_dir
-import pandas as pd
+from src.experiment import Experiment
+import pickle
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -56,18 +57,29 @@ def experiment():
     experiment_name = user_experiment.active_experiment.split('/')[-1]
     experiment_path = user_experiment.active_experiment
 
-    df_name = None
-    df_html = None
-    if len(glob.glob(f'{experiment_path}/*.csv')) == 1:
-        df_name = glob.glob(f'{experiment_path}/*.csv')[0].split('/')[-1]
-        df = pd.read_csv(f'{experiment_path}/{df_name}')
-        df_html = df.head().to_html()
-
     data = {}
     data['experiment_name'] = experiment_name
-    data['df_name'] = df_name
-    data['df_html'] = df_html
+    df_name = None
 
+    # Check if .csv file exists
+    if len(glob.glob(f'{experiment_path}/*.csv')) == 1:
+        df_name = glob.glob(f'{experiment_path}/*.csv')[0].split('/')[-1]
+        data['df_name'] = df_name
+
+    # If .csv file exists, create / load experiment
+    if df_name is not None:
+        pkl_path = glob.glob(f'{experiment_path}/*.pkl')
+        if len(pkl_path) == 1:
+            print("Loading experiment from pickle")
+            exp = pickle.load(open(pkl_path[0], "rb"))
+        else:
+            print("Creating new experiment")
+            exp = Experiment(f'{experiment_path}/{df_name}')
+        data['df_html'] = exp.df.df.head().to_html()
+
+        if len(pkl_path) != 1:
+            print("Saving experiment to pickle")
+            pickle.dump(exp, open(f'{experiment_path}/exp.pkl', "wb"))
     return render_template('experiment.html', data=data)
 
 
