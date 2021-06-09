@@ -14,6 +14,7 @@
             </form>
         {% else %}
             <p>Dataframe: {{ data.df_name }}</p>
+            {{data.df_html|safe}}
         {% endif %}
     </body>
 </html>

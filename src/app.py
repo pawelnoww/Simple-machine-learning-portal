@@ -1,11 +1,11 @@
 import glob
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from src.utils.solutionutils import get_solution_dir
+import pandas as pd
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -56,13 +56,17 @@ def experiment():
     experiment_name = user_experiment.active_experiment.split('/')[-1]
     experiment_path = user_experiment.active_experiment
 
-    df = None
+    df_name = None
+    df_html = None
     if len(glob.glob(f'{experiment_path}/*.csv')) == 1:
-        df = glob.glob(f'{experiment_path}/*.csv')[0].split('/')[-1]
+        df_name = glob.glob(f'{experiment_path}/*.csv')[0].split('/')[-1]
+        df = pd.read_csv(f'{experiment_path}/{df_name}')
+        df_html = df.head().to_html()
 
     data = {}
     data['experiment_name'] = experiment_name
-    data['df'] = df
+    data['df_name'] = df_name
+    data['df_html'] = df_html
 
     return render_template('experiment.html', data=data)
 
