@@ -14,7 +14,16 @@
             </form>
         {% else %}
             <p>Dataframe: {{ data.df_name }}</p>
-            {{data.df_html|safe}}
+            <p>Raw data:</p>
+            {{ data.df_html|safe }}
+
+            {% if data.df_scaled_html %}
+                <p>Scaled data: </p>
+                {{ data.df_scaled_html|safe }}
+            {% else %}
+                <a href="{{ url_for('experiment', command='scale') }}"><button>Scale data</button></a>
+            {% endif %}
+
         {% endif %}
     </body>
 </html>

@@ -68,18 +68,31 @@ def experiment():
 
     # If .csv file exists, create / load experiment
     if df_name is not None:
+
+        # If there are .pkl file = load
         pkl_path = glob.glob(f'{experiment_path}/*.pkl')
         if len(pkl_path) == 1:
             print("Loading experiment from pickle")
             exp = pickle.load(open(pkl_path[0], "rb"))
+        # Else create new Experiment
         else:
             print("Creating new experiment")
             exp = Experiment(f'{experiment_path}/{df_name}')
         data['df_html'] = exp.df.df.head().to_html()
 
-        if len(pkl_path) != 1:
-            print("Saving experiment to pickle")
-            pickle.dump(exp, open(f'{experiment_path}/exp.pkl', "wb"))
+        # Catch commands
+        command = request.args.get("command")
+        if command == 'scale':
+            exp.scale_data()
+
+        # Display scaled data
+        if exp.df.df_scaled is not None:
+            data['df_scaled_html'] = exp.df.df_scaled.head().to_html()
+
+        # Save experiment to pickle
+        print("Saving experiment to pickle")
+        pickle.dump(exp, open(f'{experiment_path}/exp.pkl', "wb"))
+
     return render_template('experiment.html', data=data)
 
 
