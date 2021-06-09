@@ -1,3 +1,5 @@
+import glob
+
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, current_user, logout_user, login_required
@@ -52,10 +54,15 @@ def experiments():
 def experiment():
     user_experiment = UserExperiment.query.filter_by(login=current_user.login).first()
     experiment_name = user_experiment.active_experiment.split('/')[-1]
+    experiment_path = user_experiment.active_experiment
+
+    df = None
+    if len(glob.glob(f'{experiment_path}/*.csv')) == 1:
+        df = glob.glob(f'{experiment_path}/*.csv')[0].split('/')[-1]
 
     data = {}
-
     data['experiment_name'] = experiment_name
+    data['df'] = df
 
     return render_template('experiment.html', data=data)
 
@@ -126,17 +133,13 @@ def signup_post():
     return redirect(url_for('login'))
 
 
-@app.route('/upload')
-def upload():
-    return render_template('upload.html')
-
-
-@app.route('/upload', methods=['POST'])
+@app.route('/experiment', methods=['POST'])
 def upload_file():
     uploaded_file = request.files['file']
     if uploaded_file.filename != '':
-        uploaded_file.save(f'{get_solution_dir()}/data/{uploaded_file.filename}')
-    return redirect(url_for('index'))
+        path = UserExperiment.query.filter_by(login=current_user.login).first().active_experiment
+        uploaded_file.save(f'{path}/{uploaded_file.filename}')
+    return redirect(url_for('experiment'))
 
 
 def create_user_directory(username):
