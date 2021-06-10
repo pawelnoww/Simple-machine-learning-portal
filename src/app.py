@@ -5,7 +5,7 @@ from flask_login import UserMixin, LoginManager, login_user, current_user, logou
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from src.utils.solutionutils import get_solution_dir
-from src.experiment import Experiment
+from src.experiment.experiment import Experiment
 import pickle
 
 app = Flask(__name__)
