@@ -14,7 +14,9 @@
         </div>
 
         <div class="content">
-            <a href="{{ url_for('experiments') }}">Return to experiments</a>
+            <a href="{{ url_for('experiments') }}">
+                <button class="button">Return to experiments</button>
+            </a>
 
             <h1>{{ data.experiment_name }}</h1>
 
@@ -36,7 +38,7 @@
                         {{ data.df_scaled_html|safe }}
                     </div>
                 {% else %}
-                    <a href="{{ url_for('experiment', command='preprocessing') }}"><button>Run data preprocessing</button></a>
+                    <a href="{{ url_for('experiment', command='preprocessing') }}"><button class="button">Run data preprocessing</button></a>
                 {% endif %}
 
             {% endif %}

@@ -15,17 +15,14 @@
         <div class="content">
             <h3 class="title">Login</h3>
             <form method="POST" action="/login">
-                <div>
-                    <input type="text" placeholder="Login" name="login">
-                </div>
-                <div>
-                    <input type="text" placeholder="Password" name="password">
-                </div>
-                <div>
+                    <input class="inputtext" type="text" placeholder="Login" name="login"> <br />
+                    <input class="inputtext" type="password" placeholder="Password" name="password"><br />
                     <button>Sign in</button>
-                    <span><a href="{{ url_for('signup') }}">Sign up</a></span>
-                </div>
             </form>
+            <a href="{{ url_for('signup') }}">
+                Create a free account
+            </a>
+
 
             <div class="messages">
                 {% with messages = get_flashed_messages() %}
