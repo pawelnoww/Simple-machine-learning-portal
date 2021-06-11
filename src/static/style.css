@@ -53,9 +53,10 @@ body {
 }
 
 .config_label {
-    margin-left: 50px;
+    margin-left: 25px;
     display: inline-block;
-    width: 150px;
+    width: 250px;
+    text-align: left;
 }
 
 /**** buttons ****/

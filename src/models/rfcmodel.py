@@ -1,5 +1,6 @@
 from sklearn.ensemble import RandomForestClassifier
 from src.models.basemodel import BaseModel
+import optuna
 
 
 class RFCModel(BaseModel):
@@ -28,3 +29,11 @@ class RFCModel(BaseModel):
                                        ccp_alpha=self.params['ccp_alpha'],
                                        max_samples=self.params['max_samples'])
         return model
+
+    def set_optimization_params(self):
+        params = {}
+        params['n_estimators'] = optuna.distributions.IntUniformDistribution(low=1, high=300)
+        params['min_samples_split'] = optuna.distributions.UniformDistribution(low=0.001, high=1.0)
+        params['min_samples_leaf'] = optuna.distributions.IntUniformDistribution(low=1, high=10)
+        params['min_weight_fraction_leaf'] = optuna.distributions.UniformDistribution(low=0.0, high=0.5)
+        return params
