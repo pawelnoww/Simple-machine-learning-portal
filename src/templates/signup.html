@@ -1,30 +1,40 @@
 <html>
     <head>
         <title>Sign up page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
     </head>
 
     <body>
-        <h3 class="title">Sign up</h3>
-        <form method="POST" action="/signup">
-            <div>
-                <input type="text" placeholder="Login" name="login">
-            </div>
-            <div>
-                <input type="text" placeholder="Password" name="password">
-            </div>
-            <div>
-                <button>Sign up</button>
-            </div>
-        </form>
+        <div class="header">
+            <a href="/">
+                <h1>Machine Learning Portal</h1>
+            </a>
+        </div>
 
-        <div class="messages">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                        {% for message in messages %}
-                            <p>{{ message }}</p>
-                        {% endfor %}
-                {% endif %}
-            {% endwith %}
+
+        <div class="content">
+            <h3 class="title">Sign up</h3>
+            <form method="POST" action="/signup">
+                <div>
+                    <input class="inputtext" type="text" placeholder="Login" name="login">
+                </div>
+                <div>
+                    <input class="inputtext" type="password" placeholder="Password" name="password">
+                </div>
+                <div>
+                    <button class="button">Sign up</button>
+                </div>
+            </form>
+
+            <div class="messages">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
     </body>
 

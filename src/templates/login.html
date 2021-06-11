@@ -1,31 +1,38 @@
 <html>
     <head>
         <title>Login page</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
     </head>
 
     <body>
-        <h3 class="title">Login</h3>
-        <form method="POST" action="/login">
-            <div>
-                <input type="text" placeholder="Login" name="login">
-            </div>
-            <div>
-                <input type="text" placeholder="Password" name="password">
-            </div>
-            <div>
-                <button>Sign in</button>
-                <span><a href="{{ url_for('signup') }}">Sign up</a></span>
-            </div>
-        </form>
+        <div class="header">
+            <a href="/">
+                <h1>Machine Learning Portal</h1>
+            </a>
+        </div>
 
-        <div class="messages">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                        {% for message in messages %}
-                            <p>{{ message }}</p>
-                        {% endfor %}
-                {% endif %}
-            {% endwith %}
+
+        <div class="content">
+            <h3 class="title">Login</h3>
+            <form method="POST" action="/login">
+                    <input class="inputtext" type="text" placeholder="Login" name="login"> <br />
+                    <input class="inputtext" type="password" placeholder="Password" name="password"><br />
+                    <button>Sign in</button>
+            </form>
+            <a href="{{ url_for('signup') }}">
+                Create a free account
+            </a>
+
+
+            <div class="messages">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
         </div>
     </body>
 

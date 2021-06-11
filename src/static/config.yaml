@@ -1,0 +1,18 @@
+dataframe:
+  train_size: 0.8
+  shuffle: True
+  target_column: null # if None, the last column will be used as a target
+
+experiment:
+  model: KNNModel
+
+knnmodel:
+  n_neighbors: 5
+  weights: 'uniform'
+  algorithm: 'auto'
+  leaf_size: 30
+  p: 2
+  metric: 'minkowski'
+  metric_params: null
+  n_jobs: null
+
