@@ -1,12 +1,17 @@
 import glob
+
+import yaml
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, current_user, logout_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+
+from src.utils.configutils import load_config
 from src.utils.solutionutils import get_solution_dir
 from src.experiment.experiment import Experiment
 import pickle
+from shutil import copyfile
 
 STATIC_FOLDER = f'{get_solution_dir()}/src/static'
 TEMPLATE_FOLDER = f'{get_solution_dir()}/src/templates'
@@ -58,6 +63,7 @@ def experiment():
     user_experiment = UserExperiment.query.filter_by(login=current_user.login).first()
     experiment_name = user_experiment.active_experiment.split('/')[-1]
     experiment_path = user_experiment.active_experiment
+    config = load_config(experiment_path)
 
     data = {}
     data['experiment_name'] = experiment_name
@@ -79,15 +85,20 @@ def experiment():
         # Else create new Experiment
         else:
             print("Creating new experiment")
-            exp = Experiment(f'{experiment_path}/{df_name}')
+            exp = Experiment(f'{experiment_path}/{df_name}', config)
         data['df_html'] = exp.df.df.to_html()
-
         data['exp'] = exp
 
         # Catch commands
         command = request.args.get("command")
         if command == 'preprocessing':
             exp.preprocess_data()
+        elif command == 'config':
+            return render_template('edit_config.html', config=exp.config)
+        elif command == 'update_yaml':
+            print(config)
+            exp.config = config
+            exp.df.params = config['dataframe']
 
         # Display scaled data
         if exp.df.df_scaled is not None:
@@ -185,8 +196,16 @@ def get_user_experiments():
 
 @app.route('/create_experiment')
 def create_experiment():
+    # Generate experiment name
     new_dir_name = f'Experiment{str(len(get_user_experiments()) + 1).zfill(2)}'
-    os.makedirs(f'{get_solution_dir()}/data/users/{current_user.login}/{new_dir_name}')
+
+    # Generate experiment path & create it
+    experiment_dir_path = f'{get_solution_dir()}/data/users/{current_user.login}/{new_dir_name}'
+    os.makedirs(experiment_dir_path)
+
+    # Copy basic config.yaml to experiment folder
+    copyfile(src=f'{get_solution_dir()}/src/static/config.yaml', dst=f'{experiment_dir_path}/config.yaml')
+
     return redirect(url_for('experiments'))
 
 
@@ -202,6 +221,22 @@ def set_active_experiment():
     return redirect(url_for('experiment'))
 
 
+@app.route('/config', methods=['POST'])
+def config_post():
+    user_experiment = UserExperiment.query.filter_by(login=current_user.login).first()
+    experiment_path = user_experiment.active_experiment
+    current_yaml = load_config(experiment_path)
+
+    for item in current_yaml:
+        for param in current_yaml[item]:
+            current_yaml[item][param] = eval(request.form.get(param))
+
+    with open(f'{experiment_path}/config.yaml', "w") as file:
+        yaml.dump(current_yaml, file)
+
+    return redirect(url_for('experiment', command='update_yaml'))
+
+
 if __name__ == '__main__':
     app.config['SECRET_KEY'] = 'sdafddsfdsfsdfdsafdasddad'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -209,7 +244,6 @@ if __name__ == '__main__':
     # Functions
     app.jinja_env.globals.update(get_user_experiments=get_user_experiments)
     app.jinja_env.globals.update(get_solution_dir=get_solution_dir)
-    #app.jinja_env.globals.update(set_active_experiment=set_active_experiment)
 
     db.init_app(app)
     login_manager.login_view = 'login'

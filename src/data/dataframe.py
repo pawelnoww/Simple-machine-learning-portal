@@ -8,7 +8,8 @@ from src.utils.solutionutils import get_solution_dir
 
 class DataFrame:
 
-    def __init__(self, df_path):
+    def __init__(self, df_path, params):
+        self.params = params
         self.df = pd.read_csv(df_path)
         self.df_scaled = None
         self.scaling_rates = None
@@ -19,7 +20,7 @@ class DataFrame:
     def preprocess(self):
         transformed_df = self.transform_data()
         self.scale_data(transformed_df)
-        self.X_train, Y_train, X_test, Y_test = self.split_data()
+        self.X_train, self.X_test, self.Y_train, self.Y_test = self.split_data()
 
 
     def scale_data(self, df):
@@ -37,7 +38,7 @@ class DataFrame:
     def split_data(self):
         X = self.df_scaled.iloc[:, :-1]
         y = self.df_scaled.iloc[:, -1]
-        return train_test_split(X, y, train_size=0.8, shuffle=True)
+        return train_test_split(X, y, train_size=self.params['train_size'], shuffle=self.params['shuffle'])
 
     def transform_data(self):
         transformed_df = copy.deepcopy(self.df)

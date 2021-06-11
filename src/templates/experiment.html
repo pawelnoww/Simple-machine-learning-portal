@@ -19,7 +19,7 @@
             </a>
 
             <h1>{{ data.experiment_name }}</h1>
-
+            <a href="{{ url_for('experiment', command='config') }}"><button class="button">Edit parameters</button></a>
             {% if not data.df_name %}
                 <form method="POST" action="" enctype="multipart/form-data">
                     <p><input type="file" name="file"></p>
