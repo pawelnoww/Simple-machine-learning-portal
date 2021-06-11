@@ -27,7 +27,7 @@ class DataFrame:
         scaling_rates = []
         df_scaled = copy.deepcopy(df)
 
-        for column in df_scaled.columns:
+        for column in df_scaled.columns[:-1]:
             scaling_rate = max(df_scaled[column])
             df_scaled[column] /= scaling_rate
             scaling_rates.append(scaling_rate)

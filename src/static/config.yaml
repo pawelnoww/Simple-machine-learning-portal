@@ -1,4 +1,4 @@
 dataframe:
   train_size: 0.8
   shuffle: True
-  target_column: None # if None, the last column will be used as a target
+  target_column: null # if None, the last column will be used as a target
