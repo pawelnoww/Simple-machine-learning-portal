@@ -257,3 +257,10 @@ if __name__ == '__main__':
     login_manager.init_app(app)
     db.create_all(app=app)
     app.run(port=5000, host='0.0.0.0')
+
+
+# TODO dodac jeszcze ze 2 modele
+# TODO dodac moze usuwanie kolumn
+# TODO dodac optune
+# TODO dodac auto-ml (petla po dostepnych modelach + optuna + return najlepszego)
+# TODO wyglad strony
