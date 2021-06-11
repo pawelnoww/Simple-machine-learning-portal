@@ -41,8 +41,8 @@ class DataFrame:
         return train_test_split(X, y, train_size=self.params['train_size'], shuffle=self.params['shuffle'])
 
     def transform_data(self):
-        transformed_df = copy.deepcopy(self.df)
-        for column in transformed_df.columns:
+        transformed_df = self.change_column_position()
+        for column in transformed_df.columns[:-1]:
             type = transformed_df[column].dtype
             if type == 'int64' or type == 'float64':
                 pass
@@ -58,3 +58,10 @@ class DataFrame:
 
         return transformed_df
         # TODO handling category??
+
+    def change_column_position(self):
+        df = copy.deepcopy(self.df)
+        if self.params['target_column'] is not None:
+            df.drop([self.params['target_column']], axis=1, inplace=True)
+            df[self.params['target_column']] = self.df[self.params['target_column']]
+        return df
