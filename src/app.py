@@ -12,6 +12,7 @@ from src.utils.solutionutils import get_solution_dir
 from src.experiment.experiment import Experiment
 import pickle
 from shutil import copyfile
+from src.utils.castutils import smart_cast
 
 STATIC_FOLDER = f'{get_solution_dir()}/src/static'
 TEMPLATE_FOLDER = f'{get_solution_dir()}/src/templates'
@@ -234,7 +235,7 @@ def config_post():
 
     for item in current_yaml:
         for param in current_yaml[item]:
-            current_yaml[item][param] = eval(request.form.get(param))
+            current_yaml[item][param] = smart_cast(request.form.get(param))
 
     with open(f'{experiment_path}/config.yaml', "w") as file:
         yaml.dump(current_yaml, file)

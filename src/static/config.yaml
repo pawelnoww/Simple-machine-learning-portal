@@ -6,14 +6,13 @@ dataframe:
 experiment:
   model: KNNModel
 
-models:
-  knnmodel:
-    n_neighbors: 5
-    weights: 'uniform'
-    algorithm: 'auto'
-    leaf_size: 30
-    p: 2
-    metric: 'minkowski'
-    metric_params: null
-    n_jobs: null
+knnmodel:
+  n_neighbors: 5
+  weights: 'uniform'
+  algorithm: 'auto'
+  leaf_size: 30
+  p: 2
+  metric: 'minkowski'
+  metric_params: null
+  n_jobs: null
 

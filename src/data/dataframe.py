@@ -19,9 +19,13 @@ class DataFrame:
 
     def preprocess(self):
         transformed_df = self.transform_data()
+        self.fill_nan_values(transformed_df)
         self.scale_data(transformed_df)
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data()
 
+    def fill_nan_values(self, df):
+        df.fillna(method='ffill', inplace=True)
+        df.fillna(method='bfill', inplace=True)
 
     def scale_data(self, df):
         scaling_rates = []
@@ -49,9 +53,15 @@ class DataFrame:
             elif type == 'bool':
                 transformed_df[column] = transformed_df[column].astype('int64')
             elif type == 'object':
-                encoder = LabelEncoder()
-                transformed_df[column] = encoder.fit_transform(transformed_df[column])
-                self.encoders[column] = encoder
+                # Check n of unique values
+                n_unique = transformed_df[column].nunique()
+                if n_unique > 10:
+                    transformed_df.drop([column], axis=1, inplace=True)
+                    print(f'WARNING ::: column {column} has been dropped in case of too many unique values for categorical feature (10 vs {n_unique}).')
+                else:
+                    encoder = LabelEncoder()
+                    transformed_df[column] = encoder.fit_transform(transformed_df[column])
+                    self.encoders[column] = encoder
             elif type == 'datetime64' or type == 'timedelta[ns]':
                 transformed_df.drop([column], axis=1, inplace=True)
                 print(f'WARNING ::: type "{type}" is not supported. Column {column} has been dropped.')

@@ -22,7 +22,7 @@ class Experiment:
     def train(self):
         model_class = self.set_model()
         cfg_model_name = model_class.__name__.lower()
-        model = model_class(self.df, params=self.config['models'][cfg_model_name])
+        model = model_class(self.df, params=self.config[cfg_model_name])
         model.train()
         self.model = model
 
