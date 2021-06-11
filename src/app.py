@@ -260,7 +260,6 @@ if __name__ == '__main__':
 
 
 # TODO dodac jeszcze ze 2 modele
-# TODO dodac moze usuwanie kolumn
 # TODO dodac optune
 # TODO dodac auto-ml (petla po dostepnych modelach + optuna + return najlepszego)
 # TODO wyglad strony
