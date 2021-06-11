@@ -102,6 +102,12 @@ def experiment():
             exp.df.params = config['dataframe']
         elif command == 'train':
             exp.train()
+        elif command == 'optimize':
+            exp.model.optimize()
+            name = exp.model.__class__.__name__.lower()
+            config[name] = exp.model.params
+            with open(f'{experiment_path}/config.yaml', "w") as file:
+                yaml.dump(config, file)
         elif command == 'evaluate':
             exp.evaluate()
             data['eval_html'] = exp.df_with_predictions.to_html()

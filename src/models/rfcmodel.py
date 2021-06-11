@@ -27,4 +27,4 @@ class RFCModel(BaseModel):
                                        class_weight=self.params['class_weight'],
                                        ccp_alpha=self.params['ccp_alpha'],
                                        max_samples=self.params['max_samples'])
-        self.model = model
+        return model

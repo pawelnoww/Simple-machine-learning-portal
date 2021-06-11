@@ -26,6 +26,7 @@
             {% endif %}
 
             {% if data.df_scaled_html %}
+                <a href="{{ url_for('experiment', command='optimize') }}"><button class="button">Run model optimization</button></a>
                 <a href="{{ url_for('experiment', command='train') }}"><button class="button">Run model training</button></a>
             {% endif %}
 
