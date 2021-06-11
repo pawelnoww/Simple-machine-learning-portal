@@ -46,6 +46,18 @@ body {
     font-size: 15px;
 }
 
+/*** config ***/
+.config_header {
+    font-weight: bold;
+    font-size: 15pt;
+}
+
+.config_label {
+    margin-left: 50px;
+    display: inline-block;
+    width: 150px;
+}
+
 /**** buttons ****/
 
 button{

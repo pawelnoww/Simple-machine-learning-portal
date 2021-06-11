@@ -19,8 +19,8 @@
                     <p class="config_header">{{ item }}:</p>
                     {% for param in config[item] %}
                         <p class="config_param">
-                            <label>{{ param }}</label>
-                            <input class="inputtext" type="text" placeholder="{{ config[item][param] }}" name="{{ param }}">
+                            <label class="config_label" for="{{ param }}">{{ param }}</label>
+                            <input class="inputtext" type="text" name="{{ param }}" id="{{ param }}" value="{{ config[item][param] }}">
                         </p>
                     {% endfor %}
                 {% endfor %}

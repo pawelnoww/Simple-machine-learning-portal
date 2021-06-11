@@ -22,10 +22,21 @@
             <a href="{{ url_for('experiment', command='config') }}"><button class="button">Edit parameters</button></a>
 
             {% if data.df_name %}
-            <a href="{{ url_for('experiment', command='preprocessing') }}"><button class="button">Run data preprocessing</button></a>
+                <a href="{{ url_for('experiment', command='preprocessing') }}"><button class="button">Run data preprocessing</button></a>
+            {% endif %}
+
+            {% if data.df_scaled_html %}
+                <a href="{{ url_for('experiment', command='train') }}"><button class="button">Run model training</button></a>
+            {% endif %}
+
+            {% if data.exp %}
+                {% if data.exp.model %}
+                    <a href="{{ url_for('experiment', command='evaluate') }}"><button class="button">Evaluate model</button></a>
+                {% endif %}
             {% endif %}
 
             {% if not data.df_name %}
+                <h2>Upload .csv file</h2>
                 <form method="POST" action="" enctype="multipart/form-data">
                     <p><input type="file" name="file"></p>
                     <p><input type="submit" value="Submit"></p>
@@ -41,6 +52,13 @@
                     <p>Preprocessed data: </p>
                     <div class="dataframe">
                         {{ data.df_scaled_html|safe }}
+                    </div>
+                {% endif %}
+
+                {% if data.eval_html %}
+                    <p>Predicted data (accuracy score for evaluate: {{ round(data.exp.score*100, 2) }}%): </p>
+                    <div class="dataframe">
+                        {{ data.eval_html|safe }}
                     </div>
                 {% endif %}
 

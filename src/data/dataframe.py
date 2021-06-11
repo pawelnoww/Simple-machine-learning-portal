@@ -20,7 +20,7 @@ class DataFrame:
     def preprocess(self):
         transformed_df = self.transform_data()
         self.scale_data(transformed_df)
-        self.X_train, self.X_test, self.Y_train, self.Y_test = self.split_data()
+        self.X_train, self.X_test, self.y_train, self.y_test = self.split_data()
 
 
     def scale_data(self, df):

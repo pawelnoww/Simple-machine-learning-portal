@@ -99,6 +99,11 @@ def experiment():
             print(config)
             exp.config = config
             exp.df.params = config['dataframe']
+        elif command == 'train':
+            exp.train()
+        elif command == 'evaluate':
+            exp.evaluate()
+            data['eval_html'] = exp.df_with_predictions.to_html()
 
         # Display scaled data
         if exp.df.df_scaled is not None:
@@ -244,6 +249,7 @@ if __name__ == '__main__':
     # Functions
     app.jinja_env.globals.update(get_user_experiments=get_user_experiments)
     app.jinja_env.globals.update(get_solution_dir=get_solution_dir)
+    app.jinja_env.globals.update(round=round)
 
     db.init_app(app)
     login_manager.login_view = 'login'
