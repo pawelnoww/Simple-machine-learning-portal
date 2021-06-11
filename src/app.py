@@ -8,7 +8,9 @@ from src.utils.solutionutils import get_solution_dir
 from src.experiment.experiment import Experiment
 import pickle
 
-app = Flask(__name__)
+STATIC_FOLDER = f'{get_solution_dir()}/src/static'
+TEMPLATE_FOLDER = f'{get_solution_dir()}/src/templates'
+app = Flask(__name__, static_folder=STATIC_FOLDER, template_folder=TEMPLATE_FOLDER)
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -78,22 +80,33 @@ def experiment():
         else:
             print("Creating new experiment")
             exp = Experiment(f'{experiment_path}/{df_name}')
-        data['df_html'] = exp.df.df.head().to_html()
+        data['df_html'] = exp.df.df.to_html()
+
+        data['exp'] = exp
 
         # Catch commands
         command = request.args.get("command")
-        if command == 'scale':
-            exp.scale_data()
+        if command == 'preprocessing':
+            exp.preprocess_data()
 
         # Display scaled data
         if exp.df.df_scaled is not None:
-            data['df_scaled_html'] = exp.df.df_scaled.head().to_html()
+            data['df_scaled_html'] = exp.df.df_scaled.to_html()
 
         # Save experiment to pickle
         print("Saving experiment to pickle")
         pickle.dump(exp, open(f'{experiment_path}/exp.pkl', "wb"))
 
     return render_template('experiment.html', data=data)
+
+
+@app.route('/experiment', methods=['POST'])
+def upload_file():
+    uploaded_file = request.files['file']
+    if uploaded_file.filename != '':
+        path = UserExperiment.query.filter_by(login=current_user.login).first().active_experiment
+        uploaded_file.save(f'{path}/{uploaded_file.filename}')
+    return redirect(url_for('experiment'))
 
 
 @app.route('/login')
@@ -162,15 +175,6 @@ def signup_post():
     return redirect(url_for('login'))
 
 
-@app.route('/experiment', methods=['POST'])
-def upload_file():
-    uploaded_file = request.files['file']
-    if uploaded_file.filename != '':
-        path = UserExperiment.query.filter_by(login=current_user.login).first().active_experiment
-        uploaded_file.save(f'{path}/{uploaded_file.filename}')
-    return redirect(url_for('experiment'))
-
-
 def create_user_directory(username):
     os.makedirs(f'{get_solution_dir()}/data/users/{username}')
 
@@ -204,7 +208,7 @@ if __name__ == '__main__':
 
     # Functions
     app.jinja_env.globals.update(get_user_experiments=get_user_experiments)
-    #app.jinja_env.globals.update(create_experiment=create_experiment)
+    app.jinja_env.globals.update(get_solution_dir=get_solution_dir)
     #app.jinja_env.globals.update(set_active_experiment=set_active_experiment)
 
     db.init_app(app)

@@ -1,12 +1,24 @@
 <html>
     <head>
         <title>App</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
     </head>
 
     <body>
-        <h1>Hello</h1>
-        <a href="/experiments">Your experiments</a>
-        <a href="/upload">Upload a file</a>
-        <a href="/logout">Logout</a>
+        <div class="header">
+            <a href="/">
+                <h1>Machine Learning Portal</h1>
+            </a>
+        </div>
+
+        <div class="content">
+            <div class="hello">
+                <p>Hello {{ current_user.login }}</p>
+            </div>
+
+            <a class="link" href="/experiments">Your experiments</a> <br />
+            <a class="link" href="/logout">Logout</a> <br />
+        </div>
+
     </body>
 </html>

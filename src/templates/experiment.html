@@ -1,29 +1,46 @@
 <html>
     <head>
-        <title>App</title>
+        <title>Experiment</title>
+
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
+
     </head>
 
     <body>
-        <a href="{{ url_for('experiments') }}">Return to experiments</a>
-        <h1>{{ data.experiment_name }}</h1>
+        <div class="header">
+            <a href="/">
+                <h1>Machine Learning Portal</h1>
+            </a>
+        </div>
 
-        {% if not data.df_name %}
-            <form method="POST" action="" enctype="multipart/form-data">
-                <p><input type="file" name="file"></p>
-                <p><input type="submit" value="Submit"></p>
-            </form>
-        {% else %}
-            <p>Dataframe: {{ data.df_name }}</p>
-            <p>Raw data:</p>
-            {{ data.df_html|safe }}
+        <div class="content">
+            <a href="{{ url_for('experiments') }}">Return to experiments</a>
 
-            {% if data.df_scaled_html %}
-                <p>Scaled data: </p>
-                {{ data.df_scaled_html|safe }}
+            <h1>{{ data.experiment_name }}</h1>
+
+            {% if not data.df_name %}
+                <form method="POST" action="" enctype="multipart/form-data">
+                    <p><input type="file" name="file"></p>
+                    <p><input type="submit" value="Submit"></p>
+                </form>
             {% else %}
-                <a href="{{ url_for('experiment', command='scale') }}"><button>Scale data</button></a>
-            {% endif %}
+                <p>Dataframe: {{ data.df_name }}</p>
+                <p>Raw data:</p>
+                <div class="dataframe">
+                    {{ data.df_html|safe }}
+                </div>
 
-        {% endif %}
+                {% if data.df_scaled_html %}
+                    <p>Preprocessed data: </p>
+                    <div class="dataframe">
+                        {{ data.df_scaled_html|safe }}
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('experiment', command='preprocessing') }}"><button>Run data preprocessing</button></a>
+                {% endif %}
+
+            {% endif %}
+        </div>
+
     </body>
 </html>

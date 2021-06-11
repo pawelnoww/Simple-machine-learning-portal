@@ -1,0 +1,88 @@
+
+body {
+    font-family: Verdana;
+    font-size: 14pt;
+    background-color: #cbd6f0;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.hello{
+    text-align: left;
+    font-size: 20pt;
+}
+
+.header {
+    padding: 1px;
+    text-align: center;
+    background: #99adda;
+    color: white;
+    font-size: 30px;
+}
+
+.header a {
+    text-decoration: none;
+    color: white;
+}
+
+.content {
+    margin-left: 100px;
+    margin-right: 100px;
+    height: 100%;
+    padding: 20px;
+}
+
+/**** dataframe table ****/
+
+.dataframe {
+    height: 15em;
+}
+
+.dataframe table {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width: 100%;
+}
+.dataframe table thead {
+    flex: 0 0 auto;
+    width: calc(100% - 0.9em);
+}
+.dataframe table tbody {
+    flex: 1 1 auto;
+    display: block;
+    overflow-y: scroll;
+}
+.dataframe table tbody tr {
+    width: 100%;
+}
+.dataframe table thead,
+.dataframe table tbody tr {
+    display: table;
+    table-layout: fixed;
+}
+
+/* decorations */
+.dataframe {
+    padding: 0.3em;
+}
+
+.dataframe table {
+    border: none;
+}
+
+.dataframe table td {
+    padding: 0.3em;
+    border: 1px solid #99adda;
+    text-align: center;
+}
+
+.dataframe table th {
+    padding: 0.3em;
+    border: 1px solid lightgrey;
+    text-align: center;
+    border: 1px solid grey;
+    background-color: #99adda;
+}

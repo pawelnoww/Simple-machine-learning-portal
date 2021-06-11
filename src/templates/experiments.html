@@ -1,21 +1,30 @@
 <html>
     <head>
         <title>Experiments</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
     </head>
 
     <body>
-        <div class="experiments">
-            <h3>Your experiments:</h3>
-            {% with experiments = get_user_experiments() %}
-                {% if experiments %}
-                        {% for exp in experiments %}
-                            <a href="{{ url_for('set_active_experiment', name=exp) }}">{{ exp }}</a> <br />
-                        {% endfor %}
-                {% endif %}
-            {% endwith %}
+        <div class="header">
+            <a href="/">
+                <h1>Machine Learning Portal</h1>
+            </a>
         </div>
-        <div>
-            <a href="{{ url_for('create_experiment') }}"><button>Create new experiment</button></a>
+
+        <div class="content">
+            <div class="experiments">
+                <h3>Your experiments:</h3>
+                {% with experiments = get_user_experiments() %}
+                    {% if experiments %}
+                            {% for exp in experiments %}
+                                <a href="{{ url_for('set_active_experiment', name=exp) }}">{{ exp }}</a> <br />
+                            {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div>
+                <a href="{{ url_for('create_experiment') }}"><button>Create new experiment</button></a>
+            </div>
         </div>
     </body>
 </html>
