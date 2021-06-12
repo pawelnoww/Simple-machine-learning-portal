@@ -12,6 +12,7 @@ class Experiment:
         self.config = config
         self.df = DataFrame(df_path, config['dataframe'])
         self.model = None
+        self.df_with_predictions = None
 
     def preprocess_data(self):
         self.df.preprocess()

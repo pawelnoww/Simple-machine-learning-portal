@@ -111,6 +111,10 @@ def experiment():
                 yaml.dump(config, file)
         elif command == 'evaluate':
             exp.evaluate()
+
+
+        # Display predictions
+        if exp.df_with_predictions is not None:
             data['eval_html'] = exp.df_with_predictions.to_html()
 
         # Display scaled data
