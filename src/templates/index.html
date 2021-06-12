@@ -12,15 +12,23 @@
         </div>
 
         <div class="content">
-            <a class="logout" href="/logout">
-                <button class="button">Logout</button>
-            </a> <br />
 
-            <div class="hello">
-                <p>Hello {{ current_user.login }}</p>
+            <div class="experiment_left">
+                <div class="hello">
+                    <p>Hello {{ current_user.login }}</p>
+                </div>
             </div>
 
-            <a class="link" href="/experiments">Your experiments</a> <br />
+            <div class="experiment_right">
+
+                <a class="link" href="/experiments"><button>Your experiments</button></a>
+
+                <a class="logout" href="/logout">
+                    <button class="button">Logout</button>
+                </a>
+
+            </div>
+
         </div>
 
     </body>

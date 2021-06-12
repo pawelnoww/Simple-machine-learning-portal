@@ -1,6 +1,5 @@
 flask
-tensorflow==2.1.0
-keras
+optuna
 scikit-learn
 xgboost
 numpy

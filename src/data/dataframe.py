@@ -19,13 +19,22 @@ class DataFrame:
 
     def preprocess(self):
         transformed_df = self.transform_data()
-        self.fill_nan_values(transformed_df)
+        self.drop_columns(transformed_df)
         self.scale_data(transformed_df)
         self.X_train, self.X_test, self.y_train, self.y_test = self.split_data()
 
     def fill_nan_values(self, df):
         df.fillna(method='ffill', inplace=True)
         df.fillna(method='bfill', inplace=True)
+
+    def drop_columns(self, df):
+        if self.params['drop_columns'] is None:
+            return
+
+        cols = self.params['drop_columns'].strip('[').strip(']').strip("'").split(',')
+        print(cols)
+
+        df.drop(cols, axis=1, inplace=True)
 
     def scale_data(self, df):
         scaling_rates = []
@@ -46,6 +55,7 @@ class DataFrame:
 
     def transform_data(self):
         transformed_df = self.change_column_position()
+        self.fill_nan_values(transformed_df)
         for column in transformed_df.columns[:-1]:
             type = transformed_df[column].dtype
             if type == 'int64' or type == 'float64':

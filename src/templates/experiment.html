@@ -1,7 +1,6 @@
 <html>
     <head>
         <title>Experiment</title>
-
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
 
     </head>
@@ -14,26 +13,38 @@
         </div>
 
         <div class="content">
-            <a href="{{ url_for('experiments') }}">
-                <button class="button">Return to experiments</button>
-            </a>
 
-            <h1>{{ data.experiment_name }}</h1>
-            <a href="{{ url_for('experiment', command='config') }}"><button class="button">Edit parameters</button></a>
-
-            {% if data.df_name %}
-                <a href="{{ url_for('experiment', command='preprocessing') }}"><button class="button">Run data preprocessing</button></a>
-            {% endif %}
-
-            {% if data.df_scaled_html %}
-                <a href="{{ url_for('experiment', command='train') }}"><button class="button">Run model training</button></a>
-            {% endif %}
-
-            {% if data.exp %}
-                {% if data.exp.model %}
-                    <a href="{{ url_for('experiment', command='evaluate') }}"><button class="button">Evaluate model</button></a>
+            <div class="experiment_left">
+                <h1>{{ data.experiment_name }}</h1>
+                {% if data.df_name %}
+                <p>Dataframe: {{ data.df_name }}</p>
                 {% endif %}
-            {% endif %}
+            </div>
+
+            <div class="experiment_right">
+                <a href="{{ url_for('experiments') }}">
+                    <button class="button">Return to experiments</button>
+                </a>
+            </div>
+
+            <div class="experiment_buttons">
+                <a href="{{ url_for('experiment', command='config') }}"><button class="button">Edit parameters</button></a>
+
+                {% if data.df_name %}
+                    <a href="{{ url_for('experiment', command='preprocessing') }}"><button class="button">Run data preprocessing</button></a>
+                {% endif %}
+
+                {% if data.df_scaled_html %}
+                    <a href="{{ url_for('experiment', command='optimize') }}"><button class="button">Run model optimization</button></a>
+                    <a href="{{ url_for('experiment', command='train') }}"><button class="button">Run model training</button></a>
+                {% endif %}
+
+                {% if data.exp %}
+                    {% if data.exp.model %}
+                        <a href="{{ url_for('experiment', command='evaluate') }}"><button class="button">Evaluate model</button></a>
+                    {% endif %}
+                {% endif %}
+            </div>
 
             {% if not data.df_name %}
                 <h2>Upload .csv file</h2>
@@ -42,21 +53,20 @@
                     <p><input type="submit" value="Submit"></p>
                 </form>
             {% else %}
-                <p>Dataframe: {{ data.df_name }}</p>
-                <p>Raw data:</p>
+                <p class="df_header">Raw data:</p>
                 <div class="dataframe">
                     {{ data.df_html|safe }}
                 </div>
 
                 {% if data.df_scaled_html %}
-                    <p>Preprocessed data: </p>
+                    <p class="df_header">Preprocessed data: </p>
                     <div class="dataframe">
                         {{ data.df_scaled_html|safe }}
                     </div>
                 {% endif %}
 
                 {% if data.eval_html %}
-                    <p>Predicted data (accuracy score for evaluate: {{ round(data.exp.score*100, 2) }}%): </p>
+                    <p class="df_header">Predicted data (accuracy score for evaluate: {{ round(data.exp.score*100, 2) }}%): </p>
                     <div class="dataframe">
                         {{ data.eval_html|safe }}
                     </div>
@@ -64,6 +74,5 @@
 
             {% endif %}
         </div>
-
     </body>
 </html>

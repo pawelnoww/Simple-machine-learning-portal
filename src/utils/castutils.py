@@ -3,20 +3,27 @@ def try_int(val):
     try:
         if int(val):
             return True
+        elif len(val.strip('0')) == 0 and len(val) > 0:
+            return True
     except:
         return False
+
 
 def try_float(val):
     try:
         if float(val):
             return True
+        elif val.strip('0') == '.':
+            return True
     except:
         return False
+
 
 def try_bool(val):
     if val == 'True' or val == 'False':
         return True
     return False
+
 
 def try_none(val):
     if val == 'null' or val == 'None':

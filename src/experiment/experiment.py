@@ -1,10 +1,10 @@
 import copy
-
 import pandas as pd
-
 from src.data.dataframe import DataFrame
 from src.models.knnmodel import KNNModel
+from src.models.rfcmodel import RFCModel
 from src.utils.scoreutils import accuracy
+
 
 class Experiment:
 
@@ -12,6 +12,7 @@ class Experiment:
         self.config = config
         self.df = DataFrame(df_path, config['dataframe'])
         self.model = None
+        self.df_with_predictions = None
 
     def preprocess_data(self):
         self.df.preprocess()
