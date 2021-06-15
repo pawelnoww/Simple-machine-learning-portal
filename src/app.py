@@ -255,7 +255,7 @@ def config_post():
 
 
 if __name__ == '__main__':
-    app.config['SECRET_KEY'] = 'sdafddsfdsfsdfdsafdasddad'
+    app.config['SECRET_KEY'] = "OutU':Mdix!YyTYo|Hi:7+b9<IP[CR"
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 
     # Functions
