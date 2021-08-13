@@ -41,3 +41,22 @@ rfcmodel:
   class_weight: null
   ccp_alpha: 0.0
   max_samples: null
+
+svcmodel:
+  optimization_time_in_seconds: 60
+  max_optimization_iterations: 100
+  C: 1.0
+  kernel: 'rbf'
+  degree: 3
+  gamma: 'scale'
+  coef0: 0.0
+  shrinking: True
+  probability: False
+  tol: 0.001
+  cache_size: 200
+  class_weight: null
+  verbose: False
+  max_iter: -1
+  decision_function_shape: 'ovr'
+  break_ties: False
+  random_state: null

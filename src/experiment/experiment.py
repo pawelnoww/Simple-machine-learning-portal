@@ -3,6 +3,7 @@ import pandas as pd
 from src.data.dataframe import DataFrame
 from src.models.knnmodel import KNNModel
 from src.models.rfcmodel import RFCModel
+from src.models.svcmodel import SVCModel
 from src.utils.scoreutils import accuracy
 
 
