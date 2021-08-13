@@ -246,7 +246,8 @@ def config_post():
 
     for item in current_yaml:
         for param in current_yaml[item]:
-            current_yaml[item][param] = smart_cast(request.form.get(param))
+            print(f'{item}_{param}', request.form.get(f'{item}_{param}'))
+            current_yaml[item][param] = smart_cast(request.form.get(f'{item}_{param}'))
 
     with open(f'{experiment_path}/config.yaml', "w") as file:
         yaml.dump(current_yaml, file)
@@ -268,3 +269,5 @@ if __name__ == '__main__':
     login_manager.init_app(app)
     db.create_all(app=app)
     app.run(port=5000, host='0.0.0.0')
+
+# TODO parametry optimize dla mlp

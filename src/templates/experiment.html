@@ -28,9 +28,8 @@
             </div>
 
             <div class="experiment_buttons">
-                <a href="{{ url_for('experiment', command='config') }}"><button class="button">Edit parameters</button></a>
-
                 {% if data.df_name %}
+                    <a href="{{ url_for('experiment', command='config') }}"><button class="button">Edit parameters</button></a>
                     <a href="{{ url_for('experiment', command='preprocessing') }}"><button class="button">Run data preprocessing</button></a>
                 {% endif %}
 
