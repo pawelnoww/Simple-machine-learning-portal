@@ -60,3 +60,29 @@ svcmodel:
   decision_function_shape: 'ovr'
   break_ties: False
   random_state: null
+
+mlpmodel:
+  optimization_time_in_seconds: 60
+  max_optimization_iterations: 100
+  hidden_layer_sizes: (100,)
+  activation: 'relu'
+  solver: 'adam'
+  alpha: 0.0001
+  batch_size: 'auto'
+  learning_rate: 'constant'
+  learning_rate_init: 0.001
+  power_t: 0.5
+  max_iter: 200
+  shuffle: True
+  random_state: null
+  tol: 0.4
+  verbose: False
+  momentum: 0.9
+  nesterovs_momentum: True
+  early_stopping: False
+  validation_fraction: 0.1
+  beta_1: 0.9
+  beta_2: 0.999
+  epsilon: 0.00000008
+  n_iter_no_change: 10
+  max_fun: 1500
