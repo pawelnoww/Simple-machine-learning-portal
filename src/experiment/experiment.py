@@ -1,4 +1,3 @@
-import copy
 import pandas as pd
 from src.data.dataframe import DataFrame
 from src.models.knnmodel import KNNModel
@@ -36,7 +35,6 @@ class Experiment:
         self.model.train()
 
     def evaluate(self):
-        print(self.model.__class__.__name__)
         y_pred = self.model.predict(self.df.X_test)
         y_true = self.df.y_test
         self.score = accuracy(y_true, y_pred)
@@ -58,7 +56,6 @@ class Experiment:
     def choose_best_model(self):
         models = [KNNModel, SVCModel, RFCModel, MLPModel]
         self.auto_ml_scores = {}
-        # params = {}
 
         for model_class in models:
             model_name = model_class.__name__
@@ -68,7 +65,6 @@ class Experiment:
             self.train()
             self.evaluate()
             self.auto_ml_scores[model_name] = self.score
-            # params[model_name] = self.model.params
             self.config[model_name.lower()] = self.model.params
 
         best_model = max(self.auto_ml_scores, key=self.auto_ml_scores.get)
@@ -78,9 +74,7 @@ class Experiment:
         self.train()
         self.evaluate()
 
-        xd = {}
-        xd['model'] = list(self.auto_ml_scores.keys())
-        xd['score'] = list(self.auto_ml_scores.values())
-
-        self.auto_ml_scores_df = pd.DataFrame(data=xd)
-        print(self.auto_ml_scores_df)
+        auto_ml_scores_dict = {}
+        auto_ml_scores_dict['model'] = list(self.auto_ml_scores.keys())
+        auto_ml_scores_dict['score'] = list(self.auto_ml_scores.values())
+        self.auto_ml_scores_df = pd.DataFrame(data=auto_ml_scores_dict)
