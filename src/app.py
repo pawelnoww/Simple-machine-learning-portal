@@ -14,6 +14,8 @@ import pickle
 from shutil import copyfile
 from src.utils.castutils import smart_cast
 
+import pandas as pd
+
 STATIC_FOLDER = f'{get_solution_dir()}/src/static'
 TEMPLATE_FOLDER = f'{get_solution_dir()}/src/templates'
 app = Flask(__name__, static_folder=STATIC_FOLDER, template_folder=TEMPLATE_FOLDER)
@@ -103,10 +105,16 @@ def experiment():
         elif command == 'train':
             exp.train()
         elif command == 'optimize':
-            exp.train()
+            exp.set_model()
             exp.model.optimize()
             name = exp.model.__class__.__name__.lower()
             config[name] = exp.model.params
+            with open(f'{experiment_path}/config.yaml', "w") as file:
+                yaml.dump(config, file)
+            exp.model.train()
+        elif command == 'automl':
+            exp.choose_best_model()
+            config = exp.config
             with open(f'{experiment_path}/config.yaml', "w") as file:
                 yaml.dump(config, file)
         elif command == 'evaluate':
@@ -120,6 +128,10 @@ def experiment():
         # Display scaled data
         if exp.df.df_scaled is not None:
             data['df_scaled_html'] = exp.df.df_scaled.to_html()
+
+        # Display AutoML results
+        if exp.auto_ml_scores is not None:
+            data['auto_ml_scores'] = exp.auto_ml_scores_df.to_html()
 
         # Save experiment to pickle
         print("Saving experiment to pickle")
@@ -270,5 +282,4 @@ if __name__ == '__main__':
     db.create_all(app=app)
     app.run(port=5000, host='0.0.0.0')
 
-# TODO parametry optimize dla mlp
 # TODO auto ml
