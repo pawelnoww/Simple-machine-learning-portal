@@ -271,3 +271,4 @@ if __name__ == '__main__':
     app.run(port=5000, host='0.0.0.0')
 
 # TODO parametry optimize dla mlp
+# TODO auto ml
