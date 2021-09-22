@@ -41,4 +41,5 @@ class MLPModel(BaseModel):
              (8, 4,), (16, 8,), (32, 16,), (64, 32,), (128, 64,), (256, 128,),                         # 2 hidden layers
              (8, 4, 2,), (16, 8, 4,), (32, 16, 8,), (64, 32, 16,), (128, 64, 32,), (256, 128, 64,),    # 3 hidden layers
              (128, 64, 32, 16), (256, 128, 64, 32)])                                                   # 4 hidden layers
+        params['activation'] = optuna.distributions.CategoricalDistribution(['tanh', 'relu'])
         return params

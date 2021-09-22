@@ -79,7 +79,7 @@ mlpmodel:
   verbose: False
   momentum: 0.9
   nesterovs_momentum: True
-  early_stopping: False
+  early_stopping: True
   validation_fraction: 0.1
   beta_1: 0.9
   beta_2: 0.999
