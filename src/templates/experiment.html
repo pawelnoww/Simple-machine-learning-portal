@@ -34,6 +34,7 @@
                 {% endif %}
 
                 {% if data.df_scaled_html %}
+                    <a href="{{ url_for('experiment', command='automl') }}"><button class="button">Run AutoML</button></a>
                     <a href="{{ url_for('experiment', command='optimize') }}"><button class="button">Run model optimization</button></a>
                     <a href="{{ url_for('experiment', command='train') }}"><button class="button">Run model training</button></a>
                 {% endif %}
@@ -68,6 +69,13 @@
                     <p class="df_header">Predicted data (accuracy score for evaluate: {{ round(data.exp.score*100, 2) }}%): </p>
                     <div class="dataframe">
                         {{ data.eval_html|safe }}
+                    </div>
+                {% endif %}
+
+                {% if data.exp.auto_ml_scores %}
+                    <p class="df_header">AutoML scores:</p>
+                    <div class="dataframe">
+                        {{ data.auto_ml_scores|safe }}
                     </div>
                 {% endif %}
 

@@ -15,21 +15,28 @@ class Experiment:
         self.df = DataFrame(df_path, config['dataframe'])
         self.model = None
         self.df_with_predictions = None
+        self.auto_ml_scores = None
 
     def preprocess_data(self):
         self.df.preprocess()
 
-    def set_model(self):
+    def get_model(self):
         return eval(self.config['experiment']['model'])
 
-    def train(self):
-        model_class = self.set_model()
+    def set_model(self):
+        model_class = self.get_model()
         cfg_model_name = model_class.__name__.lower()
         model = model_class(self.df, params=self.config[cfg_model_name])
-        model.train()
         self.model = model
 
+    def train(self):
+        if self.model is None:
+            self.set_model()
+
+        self.model.train()
+
     def evaluate(self):
+        print(self.model.__class__.__name__)
         y_pred = self.model.predict(self.df.X_test)
         y_true = self.df.y_test
         self.score = accuracy(y_true, y_pred)
@@ -48,3 +55,32 @@ class Experiment:
         df_with_predictions[f'{target_col_name}_pred'] = y_pred
         self.df_with_predictions = df_with_predictions
 
+    def choose_best_model(self):
+        models = [KNNModel, SVCModel, RFCModel, MLPModel]
+        self.auto_ml_scores = {}
+        # params = {}
+
+        for model_class in models:
+            model_name = model_class.__name__
+            self.config['experiment']['model'] = model_name
+            self.set_model()
+            self.model.optimize()
+            self.train()
+            self.evaluate()
+            self.auto_ml_scores[model_name] = self.score
+            # params[model_name] = self.model.params
+            self.config[model_name.lower()] = self.model.params
+
+        best_model = max(self.auto_ml_scores, key=self.auto_ml_scores.get)
+        self.config['experiment']['model'] = best_model
+
+        self.set_model()
+        self.train()
+        self.evaluate()
+
+        xd = {}
+        xd['model'] = list(self.auto_ml_scores.keys())
+        xd['score'] = list(self.auto_ml_scores.values())
+
+        self.auto_ml_scores_df = pd.DataFrame(data=xd)
+        print(self.auto_ml_scores_df)
